@@ -13,7 +13,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -84,5 +83,3 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
-
-lib/
