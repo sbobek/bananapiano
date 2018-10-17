@@ -18,7 +18,7 @@ public class PianoEventHandler implements EventHandler {
 
     @Override
     public void handle(String event) {
-        int index = sounds.indexOf(event);
+        int index = sounds.indexOf(event.trim());
         string[index].pluck();
         double sample = .0;
         for (MusicString ms : string) {
