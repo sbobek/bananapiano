@@ -14,12 +14,15 @@ public class SerialReader implements SerialPortEventListener {
     SerialPort serialPort;
     EventHandler eventHandler;
     /** The port we're normally going to use. */
-    private static final String PORT_NAMES[] = {
+    public static final String PORT_NAMES[] = {
             "/dev/tty.usbserial-A9007UX1", // Mac OS X
             "/dev/ttyACM0", // Raspberry Pi Arduino
+            "/dev/ttyACM1", // Raspberry Pi Arduino
             "/dev/ttyUSB0", // Linux
             "COM3", // Windows
     };
+
+    public static final String DEFAULT_PORT = "/dev/ttyACM0";
     /**
      * A BufferedReader which will be fed by a InputStreamReader
      * converting the bytes into characters
@@ -41,10 +44,11 @@ public class SerialReader implements SerialPortEventListener {
         eventHandler = null;
     }
 
-    public void initialize() {
+
+    public void initialize(String forcePort) {
         // the next line is for Raspberry Pi and
         // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
-        System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
+        System.setProperty("gnu.io.rxtx.SerialPorts", forcePort);
 
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -86,6 +90,12 @@ public class SerialReader implements SerialPortEventListener {
             System.err.println(e.toString());
         }
     }
+
+
+    public void initialize() {
+        initialize(DEFAULT_PORT);
+    }
+
 
     /**
      * This should be called when you stop using the port.

@@ -3,26 +3,41 @@ package re.geist.bananapiano;
 
 import re.geist.bananapiano.serialreader.SerialReader;
 
+import java.util.Scanner;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
         SerialReader piano = new SerialReader();
         piano.registerHandler(new PianoEventHandler());
-        piano.initialize();
 
-        Thread t = new Thread() {
-            public void run() {
-                //the following line will keep this app alive for 1000 seconds,
-                //waiting for events to occur and responding to them (printing incoming messages to console).
-                try {
-                    Thread.sleep(1000000);
-                } catch (InterruptedException ie) {
+        boolean finish = false;
+        Scanner scanner = new Scanner(System.in);
+        while(!finish){
+            System.out.println("1. Start listening Arduino");
+            System.out.println("2. Restart connection");
+            System.out.println("0. Exit");
+            String choice = scanner.nextLine();
+
+            if(choice.equals("1")){
+                piano.initialize();
+                System.out.println("Started!");
+            }else if(choice.equals("2")){
+                System.out.print("Provide port name [\"/dev/ttyACM0\"]: ");
+                String port = scanner.nextLine();
+                if(port.trim().length() == 0){
+                    port = SerialReader.DEFAULT_PORT;
                 }
+
+                piano = new SerialReader();
+                piano.registerHandler(new PianoEventHandler());
+                piano.initialize(port);
+            }else if(choice.equals("0")){
                 piano.close();
+                finish = true;
             }
-        };
-        t.start();
-        System.out.println("Started");
+        }
+
     }
 
 
