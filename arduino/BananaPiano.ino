@@ -1,6 +1,8 @@
 int numKeys = 8;
 int digInput[] = { 2, 3, 4, 5, 6, 7, 8, 9 };
 char sounds[] = {'C','D','E','F','G','A','H','c'};
+bool pressed[] = {false, false, false,false,false,false,false,false};
+
 void setup() {
   // Start serial connection
   Serial.begin(9600);
@@ -12,15 +14,18 @@ void setup() {
 
 void loop() {
   //
-  int keypressed = 0;
   for (int j = 0; j < numKeys; j++) {
     int sensorVal = digitalRead(digInput[j]);
     String outStr = String("");
     if (sensorVal == LOW) {
-      ++keypressed;
-      outStr = outStr + sounds[j];
+      if(pressed[i] == false){
+              Serial.println(String("")+sounds[i]+String(":P");
+              pressed[i] = true;
+       }
+     }else if(pressed[i] == true){
+        Serial.println(String("")+sounds[i]+String(":R");
+     }
     }
-    Serial.println(outStr);
   }
 
   delay(250);
