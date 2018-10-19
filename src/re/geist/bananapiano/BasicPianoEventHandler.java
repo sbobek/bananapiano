@@ -6,6 +6,8 @@ import re.geist.bananapiano.synthesizer.MusicString;
 
 
 public class BasicPianoEventHandler implements EventHandler {
+    private static final int NOTE_IDX = 0;
+    private static final int PRESS_IDX = 1;
     public static final String sounds = "CDEFGAHc";
     private MusicString [] string;
     private Thread musicThread = null;
@@ -47,7 +49,8 @@ public class BasicPianoEventHandler implements EventHandler {
 
     @Override
     public synchronized void handle(String event) {
-        int index = sounds.indexOf(event.trim());
+        String[] eventString= event.trim().split(":");
+        int index = sounds.indexOf(eventString[NOTE_IDX].trim());
         string[index].pluck();
     }
 

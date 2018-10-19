@@ -41,7 +41,10 @@ public class SerialReader implements SerialPortEventListener {
     }
 
     public synchronized  void unregisterHandlers(){
-        eventHandler = null;
+        if(eventHandler != null) {
+            eventHandler.terminate();
+            eventHandler = null;
+        }
     }
 
 
