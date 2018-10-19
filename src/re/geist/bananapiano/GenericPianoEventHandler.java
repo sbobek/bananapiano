@@ -7,11 +7,12 @@ import javax.sound.midi.*;
 public class GenericPianoEventHandler implements EventHandler{
     public static final String sounds = "CDEFGAHc";
     private static final int DEFAULT_INSTRUMENT = 0;
-    private static final int SCALE_BEGINNING = 60;
+    private static final int SCALE_BEGINNING = 60; // Middle C
     private static final int STRENGTH = 600;
     private static final int DEFAULT_CHANNEL = 1;
     private static final int NOTE_IDX = 0;
     private static final int PRESS_IDX = 1;
+    private static final int DECAY = 200;
 
 
     private Synthesizer synth = MidiSystem.getSynthesizer();
@@ -49,7 +50,7 @@ public class GenericPianoEventHandler implements EventHandler{
         if(eventString[PRESS_IDX].equals("P")) {
             mc[DEFAULT_CHANNEL].noteOn(SCALE_BEGINNING + index, STRENGTH);
         }else{
-            mc[DEFAULT_CHANNEL].noteOff(SCALE_BEGINNING + index);
+            mc[DEFAULT_CHANNEL].noteOff(SCALE_BEGINNING + index, DECAY);
         }
     }
 
