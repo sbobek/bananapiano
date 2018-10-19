@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         SerialReader piano = new SerialReader();
-        piano.registerHandler(new PianoEventHandler());
+        piano.registerHandler(new BasicPianoEventHandler());
 
         boolean finish = false;
         Scanner scanner = new Scanner(System.in);
@@ -30,7 +30,7 @@ public class Main {
                 }
 
                 piano = new SerialReader();
-                piano.registerHandler(new PianoEventHandler());
+                piano.registerHandler(new BasicPianoEventHandler());
                 piano.initialize(port);
             }else if(choice.equals("0")){
                 piano.close();

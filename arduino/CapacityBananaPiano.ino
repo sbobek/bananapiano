@@ -42,12 +42,11 @@ void loop() {
     // If the capacitance reading is greater than the threshold, play a note:
     if(keys[i].capacitiveSensor(NUM_OF_SAMPLES) > CAP_THRESHOLD) {
       if(pressed[i] == false){
-        Serial.println(String("P")+sounds[i]);
+        Serial.println(String("")+sounds[i]);
         pressed[i] = true;
       }
     }else if(pressed[i] == true){
       pressed[i] = false;
-      Serial.println(String("R")+sounds[i]);
     }
 
 
