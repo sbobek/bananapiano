@@ -6,5 +6,7 @@
   * It is based on Midi synthesizer from javax: [MIDI](https://docs.oracle.com/javase/tutorial/sound/MIDI-synth.html), but in the project there is also available solution that does not require additional libraries and is based on sound synthesiser was taken from [csonder](https://github.com/csonder/Sound-Synthesizer)
   
 ## Diagram for Arduino
-TODO
+### Capacitive Sensors
+
+###
  
