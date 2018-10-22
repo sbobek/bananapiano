@@ -7,9 +7,9 @@
   
 ## Diagram for Arduino
 ### Capacitive Sensors
-In cacse of the capacitive sensors, the second input on the Arduino board is considered a "Send Input" and have to be connected to before resistors.
+In cacse of the capacitive sensors, the 10th input on the Arduino board is considered a "Send Input" and have to be connected to pin board before resistors.
 
 ![Arduino diagram](./arduino/sketch-arduino_bb.png "Arduino diagram")
 ### Hackster version
-The diagram is the same, but you need start connecting fruits from 2-9 inputs and you put 5V before resistors.
+The diagram is the same, but you need to put 5V before resistors and disconnect the 10th input.
  
