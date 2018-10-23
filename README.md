@@ -9,6 +9,8 @@
 ### Capacitive Sensors
 In cacse of the capacitive sensors, the 10th input on the Arduino board is considered a "Send Input" and have to be connected to pin board before resistors.
 
+I've tested different resistors, but the best response and stability I got with 2.2 MOhm resistors.
+
 ![Arduino diagram](./arduino/sketch-arduino_bb.png "Arduino diagram")
 ### Hackster version
 The diagram is the same, but you need to put 5V before resistors and disconnect the 10th input.
