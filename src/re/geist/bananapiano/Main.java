@@ -117,7 +117,7 @@ public class Main {
     public static void testSynthesizer(EventHandler handler) throws InterruptedException {
         String notes = "CDEFGAHc";
         for(int i = 0; i < notes.length();i++){
-            handler.handle(String.valueOf(notes.charAt(i)));
+            handler.handle(String.valueOf(notes.charAt(i))+":P");
             sleep(500);
         }
 
