@@ -104,20 +104,16 @@ public class Main {
                     }
                     i -= 9;
                 }
-
-
             }
-
-
         }
         return -1;
 
     }
 
     public static void testSynthesizer(EventHandler handler) throws InterruptedException {
-        String notes = "CDEFGAHc";
-        for(int i = 0; i < notes.length();i++){
-            handler.handle(String.valueOf(notes.charAt(i))+":P");
+        String [] notes = new String[]{"C","D","E","F","G","A","H","CC"};
+        for(int i = 0; i < notes.length;i++){
+            handler.handle(notes[i]+":P");
             sleep(500);
         }
 

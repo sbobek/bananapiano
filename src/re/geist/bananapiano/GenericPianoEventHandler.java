@@ -3,9 +3,10 @@ package re.geist.bananapiano;
 import re.geist.bananapiano.serialreader.EventHandler;
 
 import javax.sound.midi.*;
+import java.util.HashMap;
 
 public class GenericPianoEventHandler implements EventHandler{
-    public static final String sounds = "CDEFGAHc";
+    public static final String[] sounds = new String[]{"C","#C","D","#D","E","F","#F","G","#G","A","#A","H","CC"};
     private static final int DEFAULT_INSTRUMENT = 0;
     private static final int SCALE_BEGINNING = 60; // Middle C
     private static final int STRENGTH = 600;
@@ -23,6 +24,7 @@ public class GenericPianoEventHandler implements EventHandler{
     public GenericPianoEventHandler(int instrument) throws MidiUnavailableException, InvalidMidiDataException {
         synth.open();
         reloadInstrument(instrument);
+
     }
 
     public GenericPianoEventHandler() throws MidiUnavailableException, InvalidMidiDataException {
@@ -41,10 +43,19 @@ public class GenericPianoEventHandler implements EventHandler{
         synth.getChannels()[DEFAULT_CHANNEL].programChange(currentInstrument);
     }
 
+    private int indexOf(String note){
+        for(int i = 0; i < sounds.length; i++){
+            if(sounds[i].equals(note)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public void handle(String event) {
         String[] eventString= event.trim().split(":");
-        int index = sounds.indexOf(eventString[NOTE_IDX].trim());
+        int index = indexOf(eventString[NOTE_IDX].trim());
 
         //channel, note, strength
         if(eventString[PRESS_IDX].equals("P")) {

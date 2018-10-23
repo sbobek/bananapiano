@@ -25,7 +25,7 @@
 
 // Defines the pins that the keys are connected to:
 CapacitiveSensor keys[] = {CS(2),CS(3), CS(4), CS(5), CS(6), CS(7), CS(8), CS(9)};
-char sounds[] = {'C','D','E','F','G','A','H','c'};
+String sounds[] = {"C","D","E","F","G","A","H","CC"};
 bool pressed[] = {false, false, false,false,false,false,false,false};
 
 void setup() {
@@ -43,11 +43,11 @@ void loop() {
     // If the capacitance reading is greater than the threshold, play a note:
     if(keys[i].capacitiveSensor(NUM_OF_SAMPLES) > CAP_THRESHOLD) {
       if(pressed[i] == false){
-        Serial.println(String("")+sounds[i]+String(":P"));
+        Serial.println(sounds[i]+String(":P"));
         pressed[i] = true;
       }
     }else if(pressed[i] == true){
-      Serial.println(String("")+sounds[i]+String(":R"));
+      Serial.println(sounds[i]+String(":R"));
       pressed[i] = false;
     }
 

@@ -8,13 +8,13 @@ import re.geist.bananapiano.synthesizer.MusicString;
 public class BasicPianoEventHandler implements EventHandler {
     private static final int NOTE_IDX = 0;
     private static final int PRESS_IDX = 1;
-    public static final String sounds = "CDEFGAHc";
+    public static final String[] sounds = new String[]{"C","#C","D","#D","E","F","#F","G","#G","A","#A","H","CC"};
     private MusicString [] string;
     private Thread musicThread = null;
     private boolean stop = false;
 
     public BasicPianoEventHandler() {
-        string = new MusicString[sounds.length()];
+        string = new MusicString[sounds.length];
         for (int i = 0; i < string.length; i += 1) {
             string[i] = new MusicString(440.0 * Math.pow(2, (i - 24) / 12.));
         }
@@ -47,10 +47,19 @@ public class BasicPianoEventHandler implements EventHandler {
         return stop;
     }
 
+    private int indexOf(String note){
+        for(int i = 0; i < sounds.length; i++){
+            if(sounds[i].equals(note)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public synchronized void handle(String event) {
         String[] eventString= event.trim().split(":");
-        int index = sounds.indexOf(eventString[NOTE_IDX].trim());
+        int index = indexOf(eventString[NOTE_IDX].trim());
         string[index].pluck();
     }
 

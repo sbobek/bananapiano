@@ -1,6 +1,6 @@
 int numKeys = 8;
 int digInput[] = { 2, 3, 4, 5, 6, 7, 8, 9 };
-char sounds[] = {'C','D','E','F','G','A','H','c'};
+String sounds[] = {"C","D","E","F","G","A","H","CC"};
 bool pressed[] = {false, false, false,false,false,false,false,false};
 
 void setup() {
@@ -19,11 +19,11 @@ void loop() {
     String outStr = String("");
     if (sensorVal == LOW) {
       if(pressed[i] == false){
-              Serial.println(String("")+sounds[i]+String(":P");
+              Serial.println(sounds[i]+String(":P");
               pressed[i] = true;
        }
      }else if(pressed[i] == true){
-        Serial.println(String("")+sounds[i]+String(":R");
+        Serial.println(sounds[i]+String(":R");
      }
     }
   }
