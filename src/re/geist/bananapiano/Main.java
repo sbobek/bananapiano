@@ -12,6 +12,8 @@ import static java.lang.Thread.sleep;
 
 public class Main {
 
+    public static final String CLEAR_COMMAND = "cmd /c cls"; // "clear" for linux
+
     public static void main(String[] args) throws Exception {
         SerialReader piano = new SerialReader();
         EventHandler handler =new GenericPianoEventHandler();
@@ -76,7 +78,7 @@ public class Main {
 
     public static int printAndChooseInstruments(Instrument[] instrumentList){
         try {
-            Runtime.getRuntime().exec("clear");
+            Runtime.getRuntime().exec(CLEAR_COMMAND);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,7 +90,7 @@ public class Main {
                 String choice = sc.nextLine();
                 if (choice.equals("n")) {
                     try {
-                        Runtime.getRuntime().exec("clear");
+                        Runtime.getRuntime().exec(CLEAR_COMMAND);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -98,7 +100,7 @@ public class Main {
                     return Integer.parseInt(choice);
                 }else{
                     try {
-                        Runtime.getRuntime().exec("clear");
+                        Runtime.getRuntime().exec(CLEAR_COMMAND);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
