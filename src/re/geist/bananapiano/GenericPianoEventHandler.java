@@ -3,7 +3,6 @@ package re.geist.bananapiano;
 import re.geist.bananapiano.serialreader.EventHandler;
 
 import javax.sound.midi.*;
-import java.util.HashMap;
 
 public class GenericPianoEventHandler implements EventHandler{
     public static final String[] sounds = new String[]{"C","#C","D","#D","E","F","#F","G","#G","A","#A","H","CC"};

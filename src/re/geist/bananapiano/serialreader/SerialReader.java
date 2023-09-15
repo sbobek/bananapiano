@@ -1,16 +1,15 @@
 package re.geist.bananapiano.serialreader;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
-import java.util.Enumeration;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 
 
-public class SerialReader implements SerialPortEventListener {
+public class SerialReader implements SerialPortDataListener {
+    private static final int COMMAND_SIZE = 5;
+    private static final char COMMAND_TERMINATED = '\n';
+    private char[] commandBuffer = new char[COMMAND_SIZE];
+    private int commandCarretLoc = 0;
     SerialPort serialPort;
     EventHandler eventHandler;
     /** The port we're normally going to use. */
@@ -28,13 +27,6 @@ public class SerialReader implements SerialPortEventListener {
      * converting the bytes into characters
      * making the displayed results codepage independent
      */
-    private BufferedReader input;
-    /** The output stream to the port */
-    private OutputStream output;
-    /** Milliseconds to block while waiting for port open */
-    private static final int TIME_OUT = 2000;
-    /** Default bits per second for COM port. */
-    private static final int DATA_RATE = 9600;
 
     public synchronized void registerHandler(EventHandler h){
         eventHandler = h;
@@ -49,46 +41,28 @@ public class SerialReader implements SerialPortEventListener {
 
 
     public void initialize(String forcePort) {
-        // the next line is for Raspberry Pi and
-        // gets us into the while loop and was suggested here was suggested http://www.raspberrypi.org/phpBB3/viewtopic.php?f=81&t=32186
-        System.setProperty("gnu.io.rxtx.SerialPorts", forcePort);
 
-        CommPortIdentifier portId = null;
-        Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+        serialPort = null;
+        SerialPort[] portEnum = SerialPort.getCommPorts();
 
         //First, Find an instance of serial port as set in PORT_NAMES.
-        while (portEnum.hasMoreElements()) {
-            CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
-            for (String portName : PORT_NAMES) {
-                if (currPortId.getName().equals(portName)) {
-                    portId = currPortId;
+        for(SerialPort p : portEnum){
+                if (p.getSystemPortPath().equals(forcePort)) {
+                    serialPort = p;
                     break;
                 }
-            }
         }
-        if (portId == null) {
+        if (serialPort == null) {
             System.out.println("Could not find COM port.");
             return;
         }
 
         try {
             // open serial port, and use class name for the appName.
-            serialPort = (SerialPort) portId.open(this.getClass().getName(),
-                    TIME_OUT);
+            serialPort.openPort();
 
-            // set port parameters
-            serialPort.setSerialPortParams(DATA_RATE,
-                    SerialPort.DATABITS_8,
-                    SerialPort.STOPBITS_1,
-                    SerialPort.PARITY_NONE);
-
-            // open the streams
-            input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-            output = serialPort.getOutputStream();
-
-            // add event listeners
-            serialPort.addEventListener(this);
-            serialPort.notifyOnDataAvailable(true);
+            // add listener
+            serialPort.addDataListener(this);
         } catch (Exception e) {
             System.err.println(e.toString());
         }
@@ -99,35 +73,28 @@ public class SerialReader implements SerialPortEventListener {
         initialize(DEFAULT_PORT);
     }
 
+    @Override
+    public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
 
-    /**
-     * This should be called when you stop using the port.
-     * This will prevent port locking on platforms like Linux.
-     */
-    public synchronized void close() {
-        if (serialPort != null) {
-            serialPort.removeEventListener();
-            serialPort.close();
-        }
-    }
-
-    /**
-     * Handle an event on the serial port. Read the data and print it.
-     */
-    public synchronized void serialEvent(SerialPortEvent oEvent) {
-        if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-            try {
-                String inputLine=input.readLine();
-                while(inputLine!= null) {
-                    eventHandler.handle(inputLine);
-                    inputLine = input.readLine();
-                }
-            } catch (Exception e) {
-                System.err.println(e.toString());
+    @Override
+    public void serialEvent(SerialPortEvent event)
+    {
+        byte[] newData = event.getReceivedData();
+        for (int i = 0; i < newData.length; ++i) {
+            char c = (char) newData[i];
+            if (c == COMMAND_TERMINATED) {
+                commandBuffer[commandCarretLoc]='\0';
+                eventHandler.handle(String.valueOf(commandBuffer));
+                commandCarretLoc = 0;
+            } else {
+                commandBuffer[commandCarretLoc++] = c;
             }
         }
-        // Ignore all the other eventTypes, but you should consider the other ones.
     }
 
 
+    public void close() {
+        serialPort.removeDataListener();
+        serialPort.closePort();
+    }
 }

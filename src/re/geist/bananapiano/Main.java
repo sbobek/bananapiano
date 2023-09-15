@@ -1,6 +1,6 @@
 package re.geist.bananapiano;
 
-
+import com.fazecast.jSerialComm.SerialPort;
 import re.geist.bananapiano.serialreader.EventHandler;
 import re.geist.bananapiano.serialreader.SerialReader;
 
@@ -12,7 +12,7 @@ import static java.lang.Thread.sleep;
 
 public class Main {
 
-    public static final String CLEAR_COMMAND = "cmd /c cls"; // "clear" for linux
+    public static final String CLEAR_COMMAND = "clear";//"cmd /c cls"; // "clear" for linux
 
     public static void main(String[] args) throws Exception {
         SerialReader piano = new SerialReader();
@@ -34,16 +34,21 @@ public class Main {
                 piano.initialize();
                 System.out.println("Started!");
             }else if(choice.equals("2")){
-                System.out.print("Provide port name [\"/dev/ttyACM0\"]: ");
-                String port = scanner.nextLine();
-                if(port.trim().length() == 0){
-                    port = SerialReader.DEFAULT_PORT;
-                }
+                SerialPort ports [] = SerialPort.getCommPorts();
+                if(ports.length>0) {
+                    System.out.print("Provide port name [\"" + ports[0].getSystemPortPath() + "\"]: ");
+                    String port = scanner.nextLine();
+                    if (port.trim().length() == 0) {
+                        port = SerialReader.DEFAULT_PORT;
+                    }
 
-                piano = new SerialReader();
-                piano.unregisterHandlers();
-                piano.registerHandler(handler);
-                piano.initialize(port);
+                    piano = new SerialReader();
+                    piano.unregisterHandlers();
+                    piano.registerHandler(handler);
+                    piano.initialize(port);
+                }else{
+                    System.out.println("No Serial port detected!");
+                }
             }else if(choice.equals("3")){
                 System.out.print("Choose Handler (BasicHandler/GenericHandler) [GenericHandler]: ");
                 String handlerStr = scanner.nextLine();
@@ -75,6 +80,7 @@ public class Main {
         }
 
     }
+
 
     public static int printAndChooseInstruments(Instrument[] instrumentList){
         try {
