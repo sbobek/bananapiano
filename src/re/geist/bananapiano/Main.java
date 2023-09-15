@@ -39,7 +39,7 @@ public class Main {
                     System.out.print("Provide port name [\"" + ports[0].getSystemPortPath() + "\"]: ");
                     String port = scanner.nextLine();
                     if (port.trim().length() == 0) {
-                        port = SerialReader.DEFAULT_PORT;
+                        port = ports[0].getSystemPortPath() ;
                     }
 
                     piano = new SerialReader();
