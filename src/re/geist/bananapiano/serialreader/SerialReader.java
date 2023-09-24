@@ -6,7 +6,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 
 
 public class SerialReader implements SerialPortDataListener {
-    private static final int COMMAND_SIZE = 5;
+    private static final int COMMAND_SIZE = 10;
     private static final char COMMAND_TERMINATED = '\n';
     private char[] commandBuffer = new char[COMMAND_SIZE];
     private int commandCarretLoc = 0;
@@ -83,7 +83,6 @@ public class SerialReader implements SerialPortDataListener {
         for (int i = 0; i < newData.length; ++i) {
             char c = (char) newData[i];
             if (c == COMMAND_TERMINATED) {
-                commandBuffer[commandCarretLoc]='\0';
                 eventHandler.handle(String.valueOf(commandBuffer));
                 commandCarretLoc = 0;
             } else {
